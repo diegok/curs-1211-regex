@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+		<title>Regex - Perl curs</title>
+
+		<meta name="description" content="Slides for regex part of barcelona.pm perl curs">
+		<meta name="author" content="Diego Kuperman">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<script>
+			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+
+				<section>
+					<h1>Regular expressions</h1>
+					<h3>Perl curs 10/11/2012</h3>
+					<p>
+						<small>By <a href="http://twitter.com/freekey">@freekey</a></small>
+					</p>
+				</section>
+
+        <section>
+				  <img src="http://imgs.xkcd.com/comics/regular_expressions.png" alt="XKCD on regular expressions">
+          <p>
+            <a href="http://xkcd.com/208/">http://xkcd.com/208/</a>
+          </p>
+        </section>
+
+				<section>
+					<h2>Pattern matching</h2>
+				  <img src="img/pattern_matching.jpg">
+				</section>
+
+				<section>
+					<h2>Literales / Substring patterns</h2>
+          <pre><code>
+            my $string = 'Hola mundo!';
+            say "Es un saludo." if $string =~ /Hola/;
+          </code></pre>
+				</section>
+
+				<section>
+					<h2>Match operator</h2>
+          <pre><code> // </code></pre>
+          <pre><code> m// </code></pre>
+					<h2>Regex binding operator</h2>
+          <pre><code> =~ </code></pre>
+          <pre><code> !~ </code></pre>
+				</section>
+
+				<section>
+					<h2>Combinaciones y qr// operator</h2>
+          <pre><code> 
+            my $string = "Hola que tal!?"; 
+            my $regex  = qr/Hola/;
+            say "Es otro saludo!" if $string =~ /$regex/;
+
+            my $more  = qr/que tal/;
+            say "Es este saludo!" if $string =~ /$regex $more/;
+          </code></pre>
+				</section>
+
+				<section>
+					<h2>Cuantificadores</h2>
+          <h3>+</h3>
+          <h3>*</h3>
+          <h3>?</h3>
+          <h3>{3}</h3>
+          <h3>{3,}</h3>
+          <h3>{3,6}</h3>
+				</section>
+
+				<section>
+					<h2>+</h2>
+          <h3>Una o mas veces</h3>
+          <pre><code> 
+            "Hola que tal"   =~ /Ho+la/;
+            "Hoooola!!!"     =~ /Ho+la/;
+            "Hooooooooooola" =~ /Ho+la/;
+
+            # false
+            "Hla" =~ /Ho+la/;
+          </code></pre>
+				</section>
+
+				<section>
+					<h2>*</h2>
+          <h3>Cero o mas veces</h3>
+          <pre><code> 
+            "Hola que tal"   =~ /Ho*la/;
+            "Hoooola!!!"     =~ /Ho*la/;
+            "Hooooooooooola" =~ /Ho*la/;
+
+            # verdadero
+            "Hla" =~ /Ho*la/;
+          </code></pre>
+				</section>
+
+				<section>
+					<h2>?</h2>
+          <h3>Cero o una vez</h3>
+          <pre><code> 
+            "Hola que tal"   =~ /Ho?la/;
+
+            # verdadero
+            "Hla" =~ /Ho?la/;
+          </code></pre>
+				</section>
+
+				<section>
+        <h2>{min,max}</h2>
+          <h3>Número controlado de veces</h3>
+          <pre><code> 
+            "Hola que tal"   =~ /Ho{1}la/;
+            "Hoooola!!!"     =~ /Ho{3}la/;
+            "Hooooooooooola" =~ /Ho{3,}la/;
+            "Hooooooooooola" =~ /Ho{3,11}la/;
+
+            # * es igual a {0,}
+            # + es igual a {1,}
+          </code></pre>
+				</section>
+
+				<section>
+					<h2>Anchors</h2>
+          <h4>\A \Z</h4>
+          <pre><code> 
+            "Hola\nque tal" =~ /\Aque tal\Z/;
+          </code></pre>
+          <h4>^ $</h4>
+          <pre><code> 
+            "Hola que tal" =~ /^hola que tal$/;
+          </code></pre>
+          <h4>\b</h4>
+          <pre><code> 
+            "Hola que tal" =~ /\bque\b/;
+            
+            # false
+            "Nos quedamos" =~ /que\b/;
+          </code></pre>
+				</section>
+
+				<section>
+					<h2>Metacaracteres</h2>
+          <h4>. (lo que sea)</h4>
+          <pre><code> 
+            "cualquier cosa que pongamos le mola" =~ /.*/;
+          </code></pre>
+
+          <ul>
+            <li>\d \D</li>
+            <li>\w \W</li>
+            <li>\s \S</li>
+          </ul>
+				</section>
+
+				<section>
+					<h2>Character classes</h2>
+					<h3>[]</h2>
+				</section>
+
+				<section>
+					<h2>Character classes</h2>
+
+          <p>\d</p>
+          <pre><code> 
+            qr/[123456789]/  
+            qr/[1-9]/  
+          </code></pre>
+
+          <p>\D</p>
+          <pre><code> 
+            qr/[^1-9]/
+          </code></pre>
+				</section>
+
+				<section>
+					<h2>Character classes</h2>
+
+          <p>\w</p>
+          <pre><code> 
+            qr/[a-zA-Z0-9_]/
+          </code></pre>
+
+          <p>\W</p>
+          <pre><code> 
+            qr/[^a-zA-Z0-9_]/
+          </code></pre>
+				</section>
+
+				<section>
+					<h2>Character classes</h2>
+
+          <p>\s</p>
+          <pre><code> 
+            qr/[ ]/ # y varios espacios mas unicode!
+          </code></pre>
+
+          <p>\S</p>
+          <pre><code> 
+            qr/[^\s]/ # :-)
+          </code></pre>
+				</section>
+
+				<section>
+					<h2>Capturas</h2>
+          <h3>()</h3>
+				</section>
+
+				<section>
+					<h2>Capturas por posición</h2>
+
+          <pre><code> 
+my $str = "3 tristes tigres en 1 trigal con 1 copa en la mano";
+if ( $str =~ /\d(.+)\d/ ) {
+  say $1; # ???
+}
+          </code></pre>
+				</section>
+
+				<section data-state="alert">
+					<h2>Capturas por posición</h2>
+
+          <pre><code> 
+my $str = "3 tristes tigres en 1 trigal con 1 copa en la mano";
+if ( $str =~ /\d\s*(.+)\s*\d/ ) {
+  say $1; # "tristes tigres en 1 trigal con"
+}
+          </code></pre>
+				</section>
+
+				<section>
+					<h2>Greedy vs Lazy</h2>
+          <h3>Los cuantificadores + y * son avariciosos...</h3>
+          <h4>? al rescate!</h4>
+          <pre><code> 
+my $str = "3 tristes tigres en 1 trigal con 1 copa en la mano";
+if ( $str =~ /\d\s*(.+?)\s*\d/ ) {
+  say $1; # "tristes tigres en"
+}
+          </code></pre>
+				</section>
+
+				<section>
+					<h2>Capturas por nombre</h2>
+          <h3>%+</h3>
+          <pre><code> 
+my $str = "3 tristes tigres en 1 trigal con 1 copa en la mano";
+if ( $str =~ /\d\s*(?<quienes>.+?)\s*\d/ ) {
+  say $+{quienes}; # "tristes tigres en"
+}
+          </code></pre>
+				</section>
+
+				<section>
+					<h2>Un caso práctico...</h2>
+          <pre><code> 
+my $str = 'Mi dirección de correo es diego@freekeylabs.com';
+my $email = qr/\w+@\S+/;
+if ( $str =~ /(?<email>$email)/ ) {
+  say "Mi email es: $+{email}";
+}
+          </code></pre>
+				</section>
+
+				<section>
+					<h2>Grupos y alternancia</h2>
+
+          <pre><code> 
+my $str  = 'Mi dirección de correo es diego@freekeylabs.com';
+my $str2 = "Mi teléfono es 666-909-456";
+
+my $email = qr/\w+@\S+/;
+
+my $phone = qr/\b\d{3}-\d{3}-\d{3}\b/;
+
+if ( $str =~ /(?:(?<mail>$email)|(?<tel>$phone))/ ) {
+  if ( $+{mail} ) {
+    say "El email es: $+{email}";
+  }
+  else {
+    say "El teléfono es: $+{tel}";
+  }
+}
+          </code></pre>
+				</section>
+
+				<section>
+					<h2>Secuencias de escape</h2>
+          <ul>
+            <li> \ </li>
+            <li> \Q </li>
+            <li> \E </li>
+            <li> la funcion quotemeta() </li>
+          </ul>
+				</section>
+
+				<section>
+					<h3>\ (escapar)</h3>
+          <pre><code> 
+            'diego@freekeylabs.com' =~ /\w+@(?:\w+\.)+\w+/;
+          </code></pre>
+				</section>
+
+				<section>
+					<h3>quotemeta()</h3>
+          <pre><code> 
+            my $string = "...";
+            "interpolado" =~ /$string/; # match!
+
+            my $q_string = quotemeta($string);
+            "interpolado" =~ /$q_string/; # not match!
+          </code></pre>
+
+					<h3>\Q y \E</h3>
+          <pre><code> 
+            'como quotemeta()' =~ /\Q$string\E/; # not match!
+          </code></pre>
+				</section>
+
+				<section>
+					<h2>Modificadores</h2>
+
+          <pre><code> 
+$string =~ /(
+  \w+@\S+                 # pillo un email
+  |                       # o
+  \b\d{3}-\d{3}-\d{3}\b   # pillo un teléfono
+)/x;
+
+'Hola que tal!?' =~ /hola/i; # case insensitive
+          </code></pre>
+				</section>
+
+				<section>
+					<h2>Contexto de lista vs scalar</h2>
+          <p>(y el modificador /g)</p>
+          
+          <pre><code> 
+my $phone  = qr/\b\d{3}-\d{3}-\d{3}\b/;
+my $string = 'Casa: 939-098-342 | Movil: 632-090-345';
+
+say "got a phone!" if $string =~ /$phone/; # scalar context
+
+my ( $first_phone ) = $string =~ /$phone/;
+
+my @all_phones = $string =~ /$phone/g;
+          </code></pre>
+				</section>
+
+				<section>
+					<h2>substituciones</h2>
+
+          <pre><code> 
+my $phone  = qr/\b\d{3}-\d{3}-\d{3}\b/;
+my $string = 'Casa: 939-098-342 | Movil: 632-090-345';
+
+$string =~ s/$phone/(hidden data)/g;
+
+say $string; # "Casa: (hidden data) | Movil: (hidden data)";
+          </code></pre>
+				</section>
+
+				<section>
+					<h2>split()</h2>
+
+          <pre><code> 
+my @words = split /\s+/, "habia una vez una palabra";
+          </code></pre>
+				</section>
+
+				<section>
+					<h1>END</h1>
+          <h3>Mas info</h3>
+          <ul>
+            <li><a href="http://perldoc.perl.org/perlre.html">perldoc perlre</a></li>
+            <li><a href="http://perldoc.perl.org/perlretut.html">perldoc perlretut</a></li>
+            <li><a href="http://perldoc.perl.org/perlrequick.html">perldoc perlrequick</a></li>
+            <li><a href="https://metacpan.org/search?q=Regexp%3A%3Acommon">Regexp::Common</a></li>
+          </ul>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+
+				theme: Reveal.getQueryHash().theme || 'sky', // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/none
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
